@@ -2,6 +2,8 @@ FROM puppetagent
 
 MAINTAINER Dan Skadra <dskadra@gmail.com>
 
+RUN rm -rf /etc/puppetlabs/puppetdb/ssl
+
 VOLUME [ "/etc/puppetlabs", \
         "/opt/puppetlabs/puppet/cache", \
         "/opt/puppetlabs/server/data", \
