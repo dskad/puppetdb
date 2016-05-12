@@ -9,7 +9,7 @@ RUN chmod +x /docker-entrypoint.sh
 VOLUME [ "/etc/puppetlabs", \
         "/opt/puppetlabs/puppet/cache", \
         "/opt/puppetlabs/server/data", \
-        "/var/log/puppetlabs", ]
+        "/var/log/puppetlabs" ]
 
 
 EXPOSE 8080

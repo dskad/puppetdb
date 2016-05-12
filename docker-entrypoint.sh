@@ -20,6 +20,7 @@ if [ $1 = "/usr/sbin/init" ]; then
             --server=${PUPPETSERVER} \
             --waitforcert=${WAITFORCERT}
 
+    # /opt/puppetlabs/bin/puppetdb ssl-setup -f
     puppetdb ssl-setup -f
   fi
 
