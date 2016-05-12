@@ -15,7 +15,7 @@ if [ $1 = "/usr/sbin/init" ]; then
   ##    upgrade an environment or break certs on a container restart or upgrade.
   if [ ! -d  /etc/puppetlabs/puppet/ssl ]; then
     # Apply inital config on startup.
-    puppet agent -t -v --noop \
+    puppet agent --verbose --no-daemonize --onetime --noop \
             --environment=${PUPPETENV} \
             --server=${PUPPETSERVER} \
             --waitforcert=${WAITFORCERT}
