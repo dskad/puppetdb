@@ -14,4 +14,3 @@ VOLUME [ "/etc/puppetlabs", \
 
 EXPOSE 8080
 EXPOSE 8081
-EXPOSE 443
