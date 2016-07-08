@@ -6,7 +6,7 @@ RUN rm -rf /etc/puppetlabs/puppetdb/ssl
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
-VOLUME [ "/etc/puppetlabs/ssl", \
+VOLUME [ "/etc/puppetlabs", \
         "/opt/puppetlabs/puppet/cache", \
         "/opt/puppetlabs/server/data", \
         "/var/log/puppetlabs" ]

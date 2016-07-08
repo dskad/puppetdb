@@ -22,21 +22,15 @@ if [ $1 = "/usr/sbin/init" ]; then
     puppet config set dns_alt_names ${DNSALTNAMES} --section main  --environment production
   fi
 
-  ## Only initalize and setup the environments (via r10k) if server is launching
-  ##    for the first time (i.e. new server container). We don't want to unintentionally
-  ##    upgrade an environment or break certs on a container restart or upgrade.
+  ## Setup SSL and get certificate signed by puppet master if it isn't setup up
+  ##   already (i.e. new container)
   if [ ! -d  /etc/puppetlabs/puppet/ssl ]; then
-    # Puppet service isn't running yet, so only setup SSL now to prevent any errors
-    #   puppet runs
+    ## Puppet service isn't running yet, so only setup SSL now to prevent any errors
     puppet agent --verbose --no-daemonize --onetime --noop
-            # --environment=${PUPPETENV} \
-            # --server=${PUPPETSERVER} \
-            # --waitforcert=${WAITFORCERT}
 
-    # Configure puppetdb ssl with newley setup puppet ssl
+    ## Ensure puppetdb SSL certs are in sync with puppet agent signed SSL certs
     puppetdb ssl-setup -f
   fi
-
 fi
 
 ## Pass control on to the command suppled on the CMD line of the Dockerfile
