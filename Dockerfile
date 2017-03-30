@@ -1,10 +1,20 @@
 FROM puppetagent
 
-MAINTAINER Dan Skadra <dskadra@gmail.com>
+ENV FACTER_CONTAINER_ROLE="puppetdb"
 
-RUN rm -rf /etc/puppetlabs/puppetdb/ssl
+ARG PUPPET_SERVER="puppet"
+ARG ENVIRONMENT="puppet"
 COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh && \
+    puppet agent -v -w 30s \
+      --environment ${ENVIRONMENT} \
+      --server ${PUPPET_SERVER} \
+      --onetime \
+      --no-daemonize \
+      --no-usecacheonfailure \
+      --no-splay \
+      --show_diff \
+      --no-use_cached_catalog
 
 VOLUME [ "/etc/puppetlabs", \
         "/opt/puppetlabs/puppet/cache", \
@@ -14,3 +24,6 @@ VOLUME [ "/etc/puppetlabs", \
 
 EXPOSE 8080
 EXPOSE 8081
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["puppetdb", "foreground"]

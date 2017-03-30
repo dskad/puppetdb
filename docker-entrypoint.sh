@@ -1,26 +1,21 @@
 #!/bin/bash
-## unoficial "strict mode" http://redsymbol.net/articles/unofficial-bash-strict-mode/
+## unofficial "strict mode" http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -eo pipefail
 if [ -v DEBUG ]; then
   set -x
 fi
 
 # This section runs before supervisor and is good for initalization or pre-startup tasks
-if [ $1 = "/usr/sbin/init" ]; then
-  ## Create /var/run/puppetlabs directory as this will go missing since we are mounting tmpfs here
-  ## Puppetserver startup doesn't recreate this directory
-  ## https://tickets.puppetlabs.com/browse/SERVER-441
-  mkdir -p /run/puppetlabs
-
+if [ $1 = "puppetdb" ]; then
   ## Set puppet.conf settings
-  puppet config set server ${PUPPETSERVER} --section main --environment production
-  puppet config set environment ${PUPPETENV} --section main --environment production
-  puppet config set runinterval ${RUNINTERVAL} --section agent --environment production
-  puppet config set waitforcert ${WAITFORCERT} --section agent --environment production
-  puppet config set trusted_server_facts true --section main --environment production
-  if [ -v DNSALTNAMES ]; then
-    puppet config set dns_alt_names ${DNSALTNAMES} --section main  --environment production
-  fi
+#  puppet config set server ${PUPPETSERVER} --section main --environment production
+#  puppet config set environment ${PUPPETENV} --section main --environment production
+#  puppet config set runinterval ${RUNINTERVAL} --section agent --environment production
+#  puppet config set waitforcert ${WAITFORCERT} --section agent --environment production
+#  puppet config set trusted_server_facts true --section main --environment production
+#  if [ -v DNSALTNAMES ]; then
+#    puppet config set dns_alt_names ${DNSALTNAMES} --section main  --environment production
+#  fi
 
   ## Setup SSL and get certificate signed by puppet master if it isn't setup up
   ##   already (i.e. new container)
