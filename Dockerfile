@@ -1,6 +1,7 @@
 FROM puppetagent
 
-ENV FACTER_CONTAINER_ROLE="puppetdb"
+ENV FACTER_CONTAINER_ROLE="puppetdb" \
+    DNS_ALT_NAMES=puppet,puppet.example.com
 
 ARG PUPPET_SERVER="puppet"
 ARG ENVIRONMENT="puppet"

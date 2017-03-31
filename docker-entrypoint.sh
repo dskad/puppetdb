@@ -21,7 +21,12 @@ if [ $1 = "puppetdb" ]; then
   ##   already (i.e. new container)
   if [ ! -d  /etc/puppetlabs/puppet/ssl ]; then
     ## Puppet service isn't running yet, so only setup SSL now to prevent any errors
-    puppet agent --verbose --no-daemonize --onetime --noop
+    puppet agent \
+        --verbose \
+        --no-daemonize \
+        --onetime \
+        --noop \
+        ${DNS_ALT_NAMES:+--dns_alt_names=}${DNS_ALT_NAMES}
 
     ## Ensure puppetdb SSL certs are in sync with puppet agent signed SSL certs
     puppetdb ssl-setup -f
