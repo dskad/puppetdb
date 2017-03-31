@@ -16,23 +16,20 @@ if [ $1 = "puppetdb" ]; then
 #  if [ -v DNSALTNAMES ]; then
 #    puppet config set dns_alt_names ${DNSALTNAMES} --section main  --environment production
 #  fi
+  # Ensure container configuration is up to date
+  puppet agent \
+      --verbose \
+      --no-daemonize \
+      --onetime
 
   ## Setup SSL and get certificate signed by puppet master if it isn't setup up
   ##   already (i.e. new container)
-  if [ ! -d  /etc/puppetlabs/puppet/ssl ]; then
-    ## Puppet service isn't running yet, so only setup SSL now to prevent any errors
-    puppet agent \
-        --verbose \
-        --no-daemonize \
-        --onetime \
-        --noop \
-        ${DNS_ALT_NAMES:+--dns_alt_names=}${DNS_ALT_NAMES}
-
+  if [ ! -d  /etc/puppetlabs/puppetdb/ssl ]; then
     ## Ensure puppetdb SSL certs are in sync with puppet agent signed SSL certs
     puppetdb ssl-setup -f
   fi
 fi
 
-## Pass control on to the command suppled on the CMD line of the Dockerfile
+## Pass control on to the command supplied on the CMD line of the Dockerfile
 ## This makes init PID 1
 exec "$@"

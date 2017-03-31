@@ -13,9 +13,18 @@ RUN chmod +x /docker-entrypoint.sh && \
       --onetime \
       --no-daemonize \
       --no-usecacheonfailure \
-      --no-splay \
-      --show_diff \
-      --no-use_cached_catalog
+      --certname build-$(facter hostname) && \
+
+    # Clean up puppet cache from build process
+    rm -rf /opt/puppetlabs/puppet/cache/* && \
+
+    # Clean build SSL keys.
+    rm -rf /etc/puppetlabs/puppetdb/ssl/* && \
+    rm -rf /etc/puppetlabs/puppet/ssl/* && \
+
+    # Clean tmp
+    find /tmp -mindepth 1 -delete && \
+
 
 VOLUME [ "/etc/puppetlabs", \
         "/opt/puppetlabs/puppet/cache", \
