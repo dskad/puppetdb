@@ -12,7 +12,7 @@ RUN chmod +x /docker-entrypoint.sh && \
       --server ${PUPPET_SERVER} \
       --no-daemonize \
       --no-usecacheonfailure \
-      --certname build-$(facter hostname) && \
+      --certname build-`date +%s | sha256sum | head -c 8; echo ` && \
 
     # Clean up puppet cache from build process
     rm -rf /opt/puppetlabs/puppet/cache/* && \
