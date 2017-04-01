@@ -1,7 +1,6 @@
 FROM puppetagent
 
-ENV FACTER_CONTAINER_ROLE="puppetdb" \
-    DNS_ALT_NAMES=puppet,puppet.example.com
+ENV FACTER_CONTAINER_ROLE="puppetdb"
 
 ARG PUPPET_SERVER="puppet"
 ARG ENVIRONMENT="puppet"
@@ -12,6 +11,7 @@ RUN chmod +x /docker-entrypoint.sh && \
       --server ${PUPPET_SERVER} \
       --no-daemonize \
       --no-usecacheonfailure \
+      --onetime \
       --certname build-`date +%s | sha256sum | head -c 8; echo ` && \
 
     # Clean up puppet cache from build process
