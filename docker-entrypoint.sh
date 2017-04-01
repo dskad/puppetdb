@@ -19,8 +19,7 @@ if [ $1 = "puppetdb" ]; then
   # Ensure container configuration is up to date
   puppet agent \
       --verbose \
-      --no-daemonize \
-      --onetime
+      --no-daemonize
 
   ## Setup SSL and get certificate signed by puppet master if it isn't setup up
   ##   already (i.e. new container)

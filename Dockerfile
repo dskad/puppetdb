@@ -10,7 +10,6 @@ RUN chmod +x /docker-entrypoint.sh && \
     puppet agent -v -w 30s \
       --environment ${ENVIRONMENT} \
       --server ${PUPPET_SERVER} \
-      --onetime \
       --no-daemonize \
       --no-usecacheonfailure \
       --certname build-$(facter hostname) && \
