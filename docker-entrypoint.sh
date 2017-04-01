@@ -16,16 +16,17 @@ if [ $1 = "puppetdb" ]; then
 #  if [ -v DNSALTNAMES ]; then
 #    puppet config set dns_alt_names ${DNSALTNAMES} --section main  --environment production
 #  fi
-  # Ensure container configuration is up to date
-  puppet agent \
-      --verbose \
-      --no-daemonize \
-      --onetime \
-      --waitforcert 30s
 
   ## Setup SSL and get certificate signed by puppet master if it isn't setup up
   ##   already (i.e. new container)
   if [ ! -d  /etc/puppetlabs/puppetdb/ssl ]; then
+    # Ensure container configuration is up to date
+    puppet agent \
+        --verbose \
+        --no-daemonize \
+        --onetime \
+        --waitforcert 30s
+
     ## Ensure puppetdb SSL certs are in sync with puppet agent signed SSL certs
     puppetdb ssl-setup -f
   fi
