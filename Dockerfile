@@ -23,7 +23,7 @@ RUN chmod +x /docker-entrypoint.sh && \
     rm -rf /etc/puppetlabs/puppet/ssl/* && \
 
     # Clean tmp
-    find /tmp -mindepth 1 -delete && \
+    find /tmp -mindepth 1 -delete
 
 
 VOLUME [ "/etc/puppetlabs", \
