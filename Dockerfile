@@ -22,7 +22,11 @@ RUN chmod +x /docker-entrypoint.sh && \
     rm -rf /etc/puppetlabs/puppet/ssl/* && \
 
     # Clean tmp
-    find /tmp -mindepth 1 -delete
+    find /tmp -mindepth 1 -delete && \
+
+    # Fix forground command so it can listen for signals from docker
+      sed -i "s/runuser \"/exec runuser \"/" \
+        /opt/puppetlabs/server/apps/puppetdb/cli/apps/foreground
 
 
 VOLUME [ "/etc/puppetlabs", \
