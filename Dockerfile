@@ -25,8 +25,8 @@ RUN chmod +x /docker-entrypoint.sh && \
     find /tmp -mindepth 1 -delete && \
 
     # Fix forground command so it can listen for signals from docker
-      sed -i "s/runuser \"/exec runuser \"/" \
-        /opt/puppetlabs/server/apps/puppetdb/cli/apps/foreground
+    sed -i "s/runuser \"/exec runuser \"/" \
+      /opt/puppetlabs/server/apps/puppetdb/cli/apps/foreground
 
 
 VOLUME [ "/etc/puppetlabs", \
