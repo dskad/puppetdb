@@ -7,6 +7,12 @@ fi
 
 # This section runs before supervisor and is good for initialization or pre-startup tasks
 if [ $1 = "puppetdb" ]; then
+  # Set puppet.conf settings
+  [ -v PUPPET_SERVER ] && puppet config set server ${PUPPET_SERVER} --section main --environment puppet
+  [ -v PUPPET_ENV ] && puppet config set environment ${PUPPET_ENV} --section main --environment puppet
+  [ -v DNS_ALT_NAMES ] && puppet config set dns_alt_names ${DNS_ALT_NAMES} --section main  --environment puppet
+  [ -v CA_SERVER ] && puppet config set ca_server ${CA_SERVER} --section main  --environment puppet
+
   ## Setup SSL and get certificate signed by puppet master if it isn't setup up
   ##   already (i.e. new container)
   if [ ! -d  /etc/puppetlabs/puppetdb/ssl ]; then
