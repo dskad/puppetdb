@@ -5,22 +5,13 @@ if [ -v DEBUG ]; then
   set -x
 fi
 
-# This section runs before supervisor and is good for initalization or pre-startup tasks
+# This section runs before supervisor and is good for initialization or pre-startup tasks
 if [ $1 = "puppetdb" ]; then
-  ## Set puppet.conf settings
-#  puppet config set server ${PUPPETSERVER} --section main --environment production
-#  puppet config set environment ${PUPPETENV} --section main --environment production
-#  puppet config set runinterval ${RUNINTERVAL} --section agent --environment production
-#  puppet config set waitforcert ${WAITFORCERT} --section agent --environment production
-#  puppet config set trusted_server_facts true --section main --environment production
-#  if [ -v DNSALTNAMES ]; then
-#    puppet config set dns_alt_names ${DNSALTNAMES} --section main  --environment production
-#  fi
-
   ## Setup SSL and get certificate signed by puppet master if it isn't setup up
   ##   already (i.e. new container)
   if [ ! -d  /etc/puppetlabs/puppetdb/ssl ]; then
     # Ensure container configuration is up to date
+    # Note: DNS_ALT_NAMES are set at image build because puppet signs cert on 1st connect
     puppet agent \
         --verbose \
         --no-daemonize \
