@@ -18,8 +18,8 @@ RUN chmod +x /docker-entrypoint.sh && \
     rm -rf /opt/puppetlabs/puppet/cache/* && \
 
     # Clean build SSL keys.
-    rm -rf /etc/puppetlabs/puppetdb/ssl && \
     rm -rf /etc/puppetlabs/puppet/ssl && \
+    rm -rf /etc/puppetlabs/puppetdb/ssl && \
 
     # Clean tmp
     find /tmp -mindepth 1 -delete && \
