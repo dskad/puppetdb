@@ -80,7 +80,7 @@ ENV PUPPETDB_DATABASE_USER=puppetdb
 ENV PUPPETDB_DATABASE_PASSWORD=puppetdb
 ENV PUPPETDB_JAVA_ARGS="-Djava.net.preferIPv4Stack=true -Xms256m -Xmx256m"
 
-VOLUME ["/etc/puppetlabs/puppet/ssl/",
+VOLUME ["/etc/puppetlabs/puppet/ssl/", \
         "/etc/puppetlabs/puppetdb/ssl"
 
 EXPOSE 8080 8081
