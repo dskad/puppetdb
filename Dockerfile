@@ -76,12 +76,11 @@ RUN chmod +x /docker-entrypoint.sh
 ENV PUPPETDB_DATABASE_NAME="puppetdb"
 ENV PUPPETDB_DATABASE_SERVER="postgres"
 ENV PUPPETDB_DATABASE_PORT="5432"
-ENV PUPPETDB_DATABASE_USER=puppetdb
-ENV PUPPETDB_DATABASE_PASSWORD=puppetdb
-ENV PUPPETDB_JAVA_ARGS="-Djava.net.preferIPv4Stack=true -Xms256m -Xmx256m"
+ENV PUPPETDB_DATABASE_USER="puppetdb"
+ENV PUPPETDB_DATABASE_PASSWORD="puppetdb"
+ENV PUPPETDB_JAVA_ARGS="-Xmx192m"
 
-VOLUME ["/etc/puppetlabs/puppet/ssl/", \
-        "/etc/puppetlabs/puppetdb/ssl"
+VOLUME ["/etc/puppetlabs/puppet/ssl/"]
 
 EXPOSE 8080 8081
 
