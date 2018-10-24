@@ -3,7 +3,7 @@ set -eo pipefail
 if [ -v DEBUG ]; then set -x; fi
 
 # This section runs before supervisor and is good for initialization or pre-startup tasks
-if [ $2 = "foreground" ]; then
+if [ "$2" = "foreground" ]; then
   # Set JAVA_ARGS options
   [ -n "${JAVA_ARGS}" ] && sed -i "s/JAVA_ARGS=.*$/JAVA_ARGS=\"\$JAVA_ARGS\"/" /etc/sysconfig/puppetserver
 
