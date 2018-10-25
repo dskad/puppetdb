@@ -26,6 +26,9 @@ if [ "$2" = "foreground" ]; then
   echo "username = ${PUPPETDB_DATABASE_USER}" >>/etc/puppetlabs/puppetdb/conf.d/database.ini
   echo "password = ${PUPPETDB_DATABASE_PASSWORD}" >>/etc/puppetlabs/puppetdb/conf.d/database.ini
 
+  # Make performance dashboard visible on 8080
+  sed -i "s/^# host =.*/host = 0\.0\.0\.0/" /etc/puppetlabs/puppetdb/conf.d/jetty.ini
+
   ## Setup SSL and get certificate signed by puppet master if it isn't setup up
   ##   already (i.e. new container)
   if [ ! -d  /etc/puppetlabs/puppetdb/ssl ]; then
