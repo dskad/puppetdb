@@ -36,7 +36,7 @@ if [ "$2" = "foreground" ]; then
   ##   already (i.e. new container)
   if [ ! -d  /etc/puppetlabs/puppetdb/ssl ]; then
     while ! (echo > /dev/tcp/${PUPPET_SERVER}/${MASTERPORT}) >/dev/null 2>&1; do
-      echo 'Waiting for puppetserver to be available...'
+      echo 'Waiting for puppetserver to become available...'
       sleep 1
     done
     # Ensure container configuration is up to date

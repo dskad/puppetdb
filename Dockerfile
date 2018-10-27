@@ -44,7 +44,7 @@ ENV PUPPETDB_DATABASE_PORT="5432"
 ENV PUPPETDB_DATABASE_USER="puppetdb"
 ENV PUPPETDB_DATABASE_PASSWORD="puppetdb"
 ENV PUPPETDB_JAVA_ARGS="-Xmx192m"
-ENV DNS_ALT_NAMES="puppetdb,puppetdb.localhost""
+ENV DNS_ALT_NAMES="puppetdb,puppetdb.localhost"
 
 VOLUME ["/etc/puppetlabs/puppet/ssl"]
 
