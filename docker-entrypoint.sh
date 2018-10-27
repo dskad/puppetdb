@@ -19,12 +19,15 @@ if [ "$2" = "foreground" ]; then
   [ ! -n "${PUPPET_SERVER}" ] && PUPPET_SERVER=$(puppet config print server)
   [ ! -n "${MASTERPORT}" ] && MASTERPORT=$(puppet config print masterport)
 
+  puppet config set --section main dns_alt_names $(facter fqdn),$(facter hostname),$DNS_ALT_NAMES
+
   # Set database settings
-  #TODO Make this respect existing configs in the volume
-  echo "[database]" >/etc/puppetlabs/puppetdb/conf.d/database.ini
-  echo "subname = //${PUPPETDB_DATABASE_SERVER}:${PUPPETDB_DATABASE_PORT}/${PUPPETDB_DATABASE_NAME}" >>/etc/puppetlabs/puppetdb/conf.d/database.ini
-  echo "username = ${PUPPETDB_DATABASE_USER}" >>/etc/puppetlabs/puppetdb/conf.d/database.ini
-  echo "password = ${PUPPETDB_DATABASE_PASSWORD}" >>/etc/puppetlabs/puppetdb/conf.d/database.ini
+  if [ -n "${PUPPETDB_DATABASE_SERVER}" ]; then
+    echo "[database]" >/etc/puppetlabs/puppetdb/conf.d/database.ini
+    echo "subname = //${PUPPETDB_DATABASE_SERVER}:${PUPPETDB_DATABASE_PORT}/${PUPPETDB_DATABASE_NAME}" >>/etc/puppetlabs/puppetdb/conf.d/database.ini
+    echo "username = ${PUPPETDB_DATABASE_USER}" >>/etc/puppetlabs/puppetdb/conf.d/database.ini
+    echo "password = ${PUPPETDB_DATABASE_PASSWORD}" >>/etc/puppetlabs/puppetdb/conf.d/database.ini
+  fi
 
   # Make performance dashboard visible on 8080
   sed -i "s/^# host =.*/host = 0\.0\.0\.0/" /etc/puppetlabs/puppetdb/conf.d/jetty.ini
@@ -37,7 +40,6 @@ if [ "$2" = "foreground" ]; then
       sleep 1
     done
     # Ensure container configuration is up to date
-    # Note: DNS_ALT_NAMES are set at image build because puppet signs cert on 1st connect
     puppet agent \
         --verbose \
         --no-daemonize \
