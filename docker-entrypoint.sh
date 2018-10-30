@@ -14,11 +14,21 @@ if [ "$2" = "foreground" ]; then
   [ -n "${PUPPET_SERVER}" ] && puppet config set server ${PUPPET_SERVER} --section agent --environment puppet
   [ -n "${MASTERPORT}" ] && puppet config set masterport ${MASTERPORT} --section agent --environment puppet
   [ -n "${DNS_ALT_NAMES}" ] && puppet config set dns_alt_names ${DNS_ALT_NAMES} --section main  --environment puppet
-  [ -n "${CA_SERVER}" ] && puppet config set ca_server ${CA_SERVER} --section main  --environment puppet
-  [ -n "${CA_PORT}" ] && puppet config set ca_port ${CA_SERVER} --section main  --environment puppet
-
   [ ! -n "${PUPPET_SERVER}" ] && PUPPET_SERVER=$(puppet config print server)
   [ ! -n "${MASTERPORT}" ] && MASTERPORT=$(puppet config print masterport)
+
+  if [ -n "${CA_SERVER}" ]; then
+    puppet config set ca_server ${CA_SERVER} --section main  --environment puppet
+  else
+    CA_SERVER=$(puppet config print ca_server)
+  fi
+
+  if [ -n "${CA_PORT}" ]; then
+    puppet config set ca_port ${CA_PORT} --section main  --environment puppet
+  else
+    CA_PORT=$(puppet config print ca_port)
+  fi
+
 
   puppet config set --section main dns_alt_names $(facter fqdn),$(facter hostname),$DNS_ALT_NAMES
 
@@ -36,24 +46,26 @@ if [ "$2" = "foreground" ]; then
   ## Setup SSL and get certificate signed by puppet master if it isn't setup up
   ##   already (i.e. new container)
   if [ ! -d  /etc/puppetlabs/puppetdb/ssl ]; then
-    while ! (echo > /dev/tcp/${PUPPET_SERVER}/${MASTERPORT}) >/dev/null 2>&1; do
+    while ! (echo > /dev/tcp/${CA_SERVER}/${CA_PORT}) >/dev/null 2>&1; do
       echo 'Waiting for puppet server to become available...'
-      sleep 1
+      sleep 10
     done
-    # Ensure container configuration is up to date
+
+    # get our host certificate signed
     puppet agent \
         --verbose \
         --no-daemonize \
         --onetime \
         --noop \
-        --server $(puppet config print ca_server) \
-        --masterport $(puppet config print ca_port) \
+        --server ${CA_SERVER} \
+        --masterport ${CA_PORT} \
         --environment production \
         --waitforcert 30s
 
     ## Ensure puppetdb SSL certs are in sync with puppet agent signed SSL certs
     puppetdb ssl-setup -f
   fi
+  echo 'Starting puppetdb...'
 fi
 
 ## Pass control on to the command supplied on the CMD line of the Dockerfile
