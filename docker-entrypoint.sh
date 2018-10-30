@@ -7,16 +7,12 @@ if [ "$2" = "foreground" ]; then
   # Set JAVA_ARGS options
   [ -n "${JAVA_ARGS}" ] && sed -i "s/JAVA_ARGS=.*$/JAVA_ARGS=\"\$JAVA_ARGS\"/" /etc/sysconfig/puppetdb
 
-  if [ -n "${CERTNAME}" ]; then
-    puppet config set certname ${CERTNAME} --section agent --environment puppet
-  else
-    CERTNAME = $(puppet config print certname)
-  fi
 
   # Set puppet.conf settings
+  [ -n "${CERTNAME}" ] && puppet config set certname ${CERTNAME} --section agent --environment puppet
+  [ -n "${AGENT_ENVIRONMENT}" ] && puppet config set environment ${AGENT_ENVIRONMENT} --section agent --environment puppet
   [ -n "${PUPPET_SERVER}" ] && puppet config set server ${PUPPET_SERVER} --section agent --environment puppet
   [ -n "${MASTERPORT}" ] && puppet config set masterport ${MASTERPORT} --section agent --environment puppet
-  [ -n "${AGENT_ENVIRONMENT}" ] && puppet config set environment ${AGENT_ENVIRONMENT} --section agent --environment puppet
   [ -n "${DNS_ALT_NAMES}" ] && puppet config set dns_alt_names ${DNS_ALT_NAMES} --section main  --environment puppet
   [ -n "${CA_SERVER}" ] && puppet config set ca_server ${CA_SERVER} --section main  --environment puppet
   [ -n "${CA_PORT}" ] && puppet config set ca_port ${CA_SERVER} --section main  --environment puppet
