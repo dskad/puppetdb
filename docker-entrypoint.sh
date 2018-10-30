@@ -45,8 +45,11 @@ if [ "$2" = "foreground" ]; then
         --verbose \
         --no-daemonize \
         --onetime \
+        --noop \
+        --server $(puppet config print ca_server) \
+        --masterport $(puppet config print ca_port) \
+        --environment production \
         --waitforcert 30s
-        --noop
 
     ## Ensure puppetdb SSL certs are in sync with puppet agent signed SSL certs
     puppetdb ssl-setup -f
