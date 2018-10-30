@@ -33,10 +33,13 @@ RUN set -eo pipefail && if [[ -v DEBUG ]]; then set -x; fi && \
   chmod +x /usr/local/bin/dumb-init
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY healthcheck.sh /healthcheck.sh
 COPY logback.xml /etc/puppetlabs/puppetdb/
 COPY request-logging.xml /etc/puppetlabs/puppetdb/
 
-RUN chmod +x /docker-entrypoint.sh
+RUN chmod +x \
+      /docker-entrypoint.sh \
+      /healthcheck.sh
 
 ENV JAVA_ARGS="-Xmx192m"
 ENV PUPPETDB_DATABASE_SERVER="postgres"
