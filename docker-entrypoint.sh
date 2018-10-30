@@ -5,7 +5,7 @@ if [ -v DEBUG ]; then set -x; fi
 # This section runs before supervisor and is good for initialization or pre-startup tasks
 if [ "$2" = "foreground" ]; then
   # Set JAVA_ARGS options
-  [ -n "${JAVA_ARGS}" ] && sed -i "s/JAVA_ARGS=.*$/JAVA_ARGS=\"\$JAVA_ARGS\"/" /etc/sysconfig/puppetserver
+  [ -n "${JAVA_ARGS}" ] && sed -i "s/JAVA_ARGS=.*$/JAVA_ARGS=\"\$JAVA_ARGS\"/" /etc/sysconfig/puppetdb
 
   if [ -n "${CERTNAME}" ]; then
     puppet config set certname ${CERTNAME} --section agent --environment puppet
@@ -41,7 +41,7 @@ if [ "$2" = "foreground" ]; then
   ##   already (i.e. new container)
   if [ ! -d  /etc/puppetlabs/puppetdb/ssl ]; then
     while ! (echo > /dev/tcp/${PUPPET_SERVER}/${MASTERPORT}) >/dev/null 2>&1; do
-      echo 'Waiting for puppetserver to become available...'
+      echo 'Waiting for puppet server to become available...'
       sleep 1
     done
     # Ensure container configuration is up to date
