@@ -38,13 +38,19 @@ COPY request-logging.xml /etc/puppetlabs/puppetdb/
 
 RUN chmod +x /docker-entrypoint.sh
 
-ENV PUPPETDB_DATABASE_NAME="puppetdb"
+ENV JAVA_ARGS="-Xmx192m"
 ENV PUPPETDB_DATABASE_SERVER="postgres"
 ENV PUPPETDB_DATABASE_PORT="5432"
+ENV PUPPETDB_DATABASE_NAME="puppetdb"
 ENV PUPPETDB_DATABASE_USER="puppetdb"
 ENV PUPPETDB_DATABASE_PASSWORD="puppetdb"
-ENV PUPPETDB_JAVA_ARGS="-Xmx192m"
 ENV DNS_ALT_NAMES="puppetdb,puppetdb.localhost"
+# ENV PUPPET_SERVER=
+# ENV MASTERPORT=
+# ENV AGENT_ENVIRONMENT=
+# CA_SERVER=
+# CA_PORT=
+# ENV DEBUG=
 
 VOLUME ["/etc/puppetlabs/puppet/ssl"]
 
@@ -52,3 +58,5 @@ EXPOSE 8080 8081
 
 ENTRYPOINT ["dumb-init", "/docker-entrypoint.sh"]
 CMD ["puppetdb", "foreground"]
+
+HEALTHCHECK --interval=30s --timeout=30s --retries=90 CMD ["/healthcheck.sh"]
