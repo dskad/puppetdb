@@ -61,5 +61,3 @@ EXPOSE 8080 8081
 
 ENTRYPOINT ["dumb-init", "/docker-entrypoint.sh"]
 CMD ["puppetdb", "foreground"]
-
-HEALTHCHECK --interval=30s --timeout=30s --retries=90 CMD ["/healthcheck.sh"]
