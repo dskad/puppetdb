@@ -46,7 +46,7 @@ if [ "$2" = "foreground" ]; then
   ## Setup SSL and get certificate signed by puppet master if it isn't setup up
   ##   already (i.e. new container)
   if [ ! -d  /etc/puppetlabs/puppetdb/ssl ]; then
-    while ! $(echo > /dev/tcp/${CA_SERVER}/${CA_PORT}) >/dev/null 2>&1; do
+    while ! (echo > /dev/tcp/${CA_SERVER}/${CA_PORT}) >/dev/null 2>&1; do
       echo 'Waiting for puppet server to become available...'
       sleep 10
     done
