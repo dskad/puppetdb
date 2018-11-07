@@ -2,18 +2,18 @@ FROM centos:7
 
 LABEL maintainer="dskadra@gmail.com"
 
-ENV PATH="$PATH:/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin:/opt/puppetlabs/server/bin"
-ENV FACTER_CONTAINER_ROLE="puppetdb"
+ENV PATH="$PATH:/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin:/opt/puppetlabs/server/bin" \
+  FACTER_CONTAINER_ROLE="puppetdb"
 
 ## Current available releases: puppet5, puppet5-nightly, puppet6, puppet6-nightly
-ENV PUPPET_RELEASE="puppet6"
+ARG PUPPET_RELEASE="puppet6"
 
 ## Latest by default, un-comment to pin specific versions or supply with -e PUPPETDB_VERSION
 ## Example:
 ## ENV PUPPETDB_VERSION="5.2.*"
 ## ENV PUPPETDB_VERSION="5.2.4"
-ENV PUPPETDB_VERSION=
-ENV DUMB_INIT_VERSION=1.2.2
+ARG PUPPETDB_VERSION
+ARG DUMB_INIT_VERSION=1.2.2
 
 RUN set -eo pipefail && if [[ -v DEBUG ]]; then set -x; fi && \
   # Import repository keys and add puppet repository
@@ -32,28 +32,20 @@ RUN set -eo pipefail && if [[ -v DEBUG ]]; then set -x; fi && \
   curl -Lo /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v${DUMB_INIT_VERSION}/dumb-init_${DUMB_INIT_VERSION}_amd64 && \
   chmod +x /usr/local/bin/dumb-init
 
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-COPY healthcheck.sh /healthcheck.sh
-COPY logback.xml /etc/puppetlabs/puppetdb/
-COPY request-logging.xml /etc/puppetlabs/puppetdb/
+COPY docker-helper /
+COPY config /etc/puppetlabs/puppetdb/
 
 RUN chmod +x \
       /docker-entrypoint.sh \
       /healthcheck.sh
 
-ENV JAVA_ARGS="-Xmx192m"
-ENV PUPPETDB_DATABASE_SERVER="postgres"
-ENV PUPPETDB_DATABASE_PORT="5432"
-ENV PUPPETDB_DATABASE_NAME="puppetdb"
-ENV PUPPETDB_DATABASE_USER="puppetdb"
-ENV PUPPETDB_DATABASE_PASSWORD="puppetdb"
-ENV DNS_ALT_NAMES="puppetdb,puppetdb.localhost"
-# ENV PUPPET_SERVER=
-# ENV MASTERPORT=
-# ENV AGENT_ENVIRONMENT=
-# CA_SERVER=
-# CA_PORT=
-# ENV DEBUG=
+ENV JAVA_ARGS="-Xmx192m" \
+  PUPPETDB_DATABASE_SERVER="postgres" \
+  PUPPETDB_DATABASE_PORT="5432" \
+  PUPPETDB_DATABASE_NAME="puppetdb" \
+  PUPPETDB_DATABASE_USER="puppetdb" \
+  PUPPETDB_DATABASE_PASSWORD="puppetdb" \
+  DNS_ALT_NAMES="puppetdb,puppetdb.localhost"
 
 VOLUME ["/etc/puppetlabs/puppet/ssl"]
 
